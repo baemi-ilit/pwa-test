@@ -25,24 +25,27 @@
 
 <body>
   <h1>hello world!</h1>
+
+  <!-- 공유버튼 -->
   <button onclick="doShare('#shareUrl')">COPY</button>
+  <!-- 공유 URL -->
   <input class="a11y-hidden" tabindex="-1" id="shareUrl" type="text" value="https://www.daum.net/" />
 
   <script>
-
-    function doShare(hiddenId) {
-      const hiddenInput = document.querySelector(hiddenId);
-      if(!hiddenInput) {
-        console.error('Not found input id:', hiddenId);
+    // URL 공유
+    function doShare(shareUrlId) {
+      const shareUrlInput = document.querySelector(shareUrlId);
+      if(!shareUrlInput) {
+        console.error('Not found input id:', shareUrlId);
       }
 
       if(navigator.share) {
-        const shareUrl = hiddenInput.value;
-
         // Web Share API 지원
+
+        const shareUrl = shareUrlInput.value;
         navigator.share({
-          // title: 'pwa test',
-          // text: 'hello wolrd',
+          // title: '타이틀',
+          // text: '본문',
           url: shareUrl
         });
 
@@ -50,17 +53,18 @@
       } else {
         // Web Share API 지원하지 않음
         // 클립보드 복사 수행
-        copyToClipboard(hiddenInput);
+        copyToClipboard(shareUrlInput);
       }
     }
 
-    function copyToClipboard(hiddenInput) {
-      hiddenInput.select();
+    // 클립보드 복사
+    function copyToClipboard(shareUrlInput) {
+      shareUrlInput.select();
 
       document.execCommand('copy');
-      hiddenInput.setSelectionRange(0, 0);
+      shareUrlInput.setSelectionRange(0, 0);
 
-      alert('복사완료\n' + hiddenInput.value);
+      alert('복사완료\n' + shareUrlInput.value);
     }
   </script>
 </body>
