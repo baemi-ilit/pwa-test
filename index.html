@@ -1,24 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>pwa test</title>
+
+  <style>
+    .a11y-hidden {
+      overflow: hidden;
+      position: absolute;
+      clip: rect(0 0 0 0);
+      /* IE 6,7 */
+      clip: rect(0, 0, 0, 0);
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      border: 0;
+      padding: 0;
+    }
+  </style>
 </head>
+
 <body>
   <h1>hello world!</h1>
-  <button onclick="test()">TEST</button>
+  <button onclick="doShare('#shareUrl')">COPY</button>
+  <input class="a11y-hidden" tabindex="-1" id="shareUrl" type="text" value="https://www.daum.net/" />
 
   <script>
-    function test() {
-      alert('!!!');
-      navigator.share({
-        title: 'pwa test',
-        text: 'hello wolrd',
-        url: 'https://www.naver.com'
-      });
+
+    function doShare(hiddenId) {
+      const hiddenInput = document.querySelector(hiddenId);
+      if(!hiddenInput) {
+        console.error('Not found input id:', hiddenId);
+      }
+
+      if(navigator.share) {
+        const shareUrl = hiddenInput.value;
+
+        // Web Share API 지원
+        navigator.share({
+          // title: 'pwa test',
+          // text: 'hello wolrd',
+          url: shareUrl
+        });
+
+        console.log('doShare url:', shareUrl);
+      } else {
+        // Web Share API 지원하지 않음
+        // 클립보드 복사 수행
+        copyToClipboard(hiddenInput);
+      }
+    }
+
+    function copyToClipboard(hiddenInput) {
+      hiddenInput.select();
+
+      document.execCommand('copy');
+      hiddenInput.setSelectionRange(0, 0);
+
+      alert('복사완료\n' + hiddenInput.value);
     }
   </script>
 </body>
+
 </html>
